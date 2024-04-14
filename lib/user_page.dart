@@ -6,7 +6,7 @@ class UserInfoPage extends StatefulWidget {
   const UserInfoPage({super.key});
 
   @override
-  _UserInfoPageState createState() => _UserInfoPageState();
+  State<UserInfoPage> createState() => _UserInfoPageState();
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
@@ -19,7 +19,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
   }
 
   Future<void> _fetchUserInfo() async {
-    final String token = ''; // 获取用户 token，可以通过 Provider 管理状态或其他方式获取
+    const String token = ''; // 获取用户 token，可以通过 Provider 管理状态或其他方式获取
     final response = await http.get(Uri.parse('http://your-api-url/douyin/user/?token=$token'));
 
     if (response.statusCode == 200) {
@@ -35,16 +35,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('用户信息')),
-      body: Column(
+      appBar: AppBar(title: const Text('用户信息')),
+      body: const Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(backgroundImage: NetworkImage(userInfo['avatar'])),
-          Text(userInfo['name']),
-          Text(userInfo['signature']),
-          // 其他用户信息展示
-        ],
+
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:untitled/video_page.dart';
+
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.title}) : super(key: key);
@@ -17,29 +18,33 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   Future<void> _login() async {
-    final String username = usernameController.text;
-    final String password = passwordController.text;
-    final response = await http.post(
-      Uri.parse('http://your-api-url/douyin/user/login/?username=$username&password=$password'),
+    // final String username = usernameController.text;
+    // final String password = passwordController.text;
+    // final response = await http.post(
+    //   Uri.parse('http://your-api-url/douyin/user/login/?username=$username&password=$password'),
+    // );
+    //
+    // // 处理登录响应，根据需要进行跳转或提示
+    // if (response.statusCode == 200) {
+    //   // 登录成功，使用全局键执行页面导航
+    //   navigatorKey.currentState?.pushReplacement(
+    //     MaterialPageRoute(builder: (context) => const MyHomePage()),
+    //   );
+    // } else {
+    //   // 登录失败，显示错误信息
+    //   ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+    //     const SnackBar(content: Text('登录失败，请检查用户名和密码')),
+    //   );
+    // }
+    navigatorKey.currentState?.pushReplacement(
+      MaterialPageRoute(builder: (context) => const MyHomePage()),
     );
-
-    // 处理登录响应，根据需要进行跳转或提示
-    if (response.statusCode == 200) {
-      // 登录成功，使用全局键执行页面导航
-      navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (context) => const VideoPage()),
-      );
-    } else {
-      // 登录失败，显示错误信息
-      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-        const SnackBar(content: Text('登录失败，请检查用户名和密码')),
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       title: widget.title,
       home: Scaffold(
