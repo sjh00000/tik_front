@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class PublishPage extends StatelessWidget {
   final TextEditingController titleController = TextEditingController();
 
+  PublishPage({super.key});
+
   Future<void> _publish(BuildContext context) async {
-    final String token = ''; // 获取用户 token，可以通过 Provider 管理状态或其他方式获取
+    const String token = ''; // 获取用户 token，可以通过 Provider 管理状态或其他方式获取
     final String title = titleController.text;
 
     final response = await http.post(
@@ -27,16 +28,16 @@ class PublishPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('投稿')),
+      appBar: AppBar(title: const Text('投稿')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(controller: titleController, decoration: InputDecoration(labelText: '标题')),
-            SizedBox(height: 16.0),
-            ElevatedButton(onPressed: () => _publish(context), child: Text('发布')),
+            TextField(controller: titleController, decoration: const InputDecoration(labelText: '标题')),
+            const SizedBox(height: 16.0),
+            ElevatedButton(onPressed: () => _publish(context), child: const Text('发布')),
           ],
         ),
       ),
