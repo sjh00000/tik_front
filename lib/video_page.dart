@@ -43,13 +43,6 @@ class _VideoPageState extends State<VideoPage> {
           ),
         );
       }
-    })
-        .catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('请求失败，请检查网络'),
-        ),
-      );
     });
   }
 
@@ -65,10 +58,6 @@ class _VideoPageState extends State<VideoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('视频'),
-        backgroundColor: Colors.black,
-      ),
       body: SizedBox( // 使用Container来确保填充整个页面
         height: MediaQuery.of(context).size.height, // 设置容器高度为屏幕高度
         child: PageView.builder(
@@ -76,16 +65,26 @@ class _VideoPageState extends State<VideoPage> {
           itemCount: videoList.length,
           itemBuilder: (context, index) {
             final video = videoList[index];
+            final dataSource = BetterPlayerDataSource.network(video['play_url']);
+            double videoWidth = 2;
+            double videoHeight = 9;
+            // 发送 HTTP 请求以获取视频的元数据信息
+            http.get(Uri.parse(video['play_url'])).then((response) {
+              if (response.statusCode == 200) {
+                Map<String, dynamic> videoMetadata = json.decode(response.body);
+                videoWidth = videoMetadata['width'];
+                videoHeight = videoMetadata['height'];
+              }
+            });
+
             final betterPlayerController = BetterPlayerController(
-              const BetterPlayerConfiguration(
+               BetterPlayerConfiguration(
                 autoPlay: true,
-                looping: false,
-                aspectRatio: 2 / 9,
+                looping: true,
+                aspectRatio: videoWidth/videoHeight,
                 // fit: BoxFit.cover,
               ),
-              betterPlayerDataSource: BetterPlayerDataSource.network(
-                video['play_url'],
-              ),
+              betterPlayerDataSource: dataSource
             );
             return GestureDetector(
               child: Container(
@@ -106,19 +105,19 @@ class _VideoPageState extends State<VideoPage> {
                     Positioned(
                       top: 20,
                       right: 60,
-                      left: 20,
+                      left: 0,
                       child: Text(
                         "@${video['author']['name']}",
                         style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Positioned(
-                      top: 60,
+                      top: 45,
                       right: 60,
-                      left: 20,
+                      left:0,
                       child: Text(
                         video['title'],
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
