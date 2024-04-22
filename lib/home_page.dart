@@ -4,7 +4,7 @@ import 'package:untitled/user_page.dart';
 import 'package:untitled/video_page.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage(int userId, String userToken, {Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
