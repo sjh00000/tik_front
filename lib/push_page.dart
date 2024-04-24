@@ -72,17 +72,19 @@ class _UploadVideoPageState extends State<PublishPage> {
     // 构造multipart请求体
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://127.0.0.1:8080/douyin/publish/action/'),
-    )
-      ..fields['token'] = token
-      ..fields['title'] = title
-      ..files.add(
-        await http.MultipartFile.fromPath(
-          'data',
-          _videoFile!.path,
-          contentType: MediaType('video', path.extension(_videoFile!.path)), // 使用 MediaType 类
-        ),
-      );
+      Uri.parse('http://47.115.203.81:8080/douyin/publish/action/'),
+    );
+    // 添加表单字段
+    request.fields['token'] = token;
+    request.fields['title'] = title;
+    // 添加文件
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'data',
+        _videoFile!.path,
+        contentType: MediaType('video', 'mp4'), // 修改为你实际文件类型
+      ),
+    );
 
     final response = await http.Response.fromStream(await request.send());
 
