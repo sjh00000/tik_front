@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,29 +18,37 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  late int userId=0;
+  late String userToken="";
 
+  @override
+  void initState(){
+    super.initState();
+  }
   Future<void> _login() async {
-    // final String username = usernameController.text;
-    // final String password = passwordController.text;
-    // final response = await http.post(
-    //   Uri.parse('http://your-api-url/douyin/user/login/?username=$username&password=$password'),
-    // );
-    //
-    // // 处理登录响应，根据需要进行跳转或提示
-    // if (response.statusCode == 200) {
-    //   // 登录成功，使用全局键执行页面导航
-    //   navigatorKey.currentState?.pushReplacement(
-    //     MaterialPageRoute(builder: (context) => const MyHomePage()),
-    //   );
-    // } else {
-    //   // 登录失败，显示错误信息
-    //   ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-    //     const SnackBar(content: Text('登录失败，请检查用户名和密码')),
-    //   );
-    // }
-    navigatorKey.currentState?.pushReplacement(
-      MaterialPageRoute(builder: (context) => const MyHomePage()),
+    final String username = usernameController.text;
+    final String password = passwordController.text;
+    final response = await http.post(
+      Uri.parse('http://47.115.203.81:8080/douyin/user/login/?username=$username&password=$password'),
     );
+    final jsonData = jsonDecode(response.body);
+    print(jsonData);
+    userId=int.parse(jsonData['user_id']??'0');
+    userToken = (jsonData['token']==''?'sun_123456':'123').toString();
+    debugPrint('token是$userToken\nuser_id是$userId');
+
+    // 处理登录响应，根据需要进行跳转或提示
+    if (response.statusCode == 200) {
+      // 登录成功，使用全局键执行页面导航
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(builder: (context) => MyHomePage(userId,userToken:userToken)),
+      );
+    } else {
+      // 登录失败，显示错误信息
+      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+        const SnackBar(content: Text('登录失败，请检查用户名和密码')),
+      );
+    }
   }
 
   @override

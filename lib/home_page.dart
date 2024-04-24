@@ -4,7 +4,9 @@ import 'package:untitled/user_page.dart';
 import 'package:untitled/video_page.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  final int userId;
+  final String userToken;
+  const MyHomePage(this.userId,{super.key, required this.userToken});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -12,12 +14,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  late String userToken = '';
+  late List<Widget> _widgetOptions=<Widget>[];
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    const VideoPage(),
-    const UserInfoPage(),
-    PublishPage(),
-  ];
+  @override
+  void initState(){
+    super.initState();
+    userToken=widget.userToken;
+    _widgetOptions = <Widget>[
+      VideoPage(userToken: userToken),
+      UserInfoPage(userToken: widget.userToken),
+      PublishPage(userToken: widget.userToken),
+    ];
+  }
+
 
   void _onItemTapped(int index) {
     setState(() {
