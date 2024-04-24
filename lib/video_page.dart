@@ -16,6 +16,7 @@ class _VideoPageState extends State<VideoPage> {
   late PageController _pageController;
   List<dynamic> videoList = [];
   late String userToken='';
+  late BetterPlayerController betterPlayerController;
 
   @override
   void initState() {
@@ -49,28 +50,29 @@ class _VideoPageState extends State<VideoPage> {
     });
   }
 
-  Future<void> _likeVideo(String index,bool? favorited) async {
-    // 向后端发送点赞请求
+  void _likeVideo(String index,bool? favorited, BuildContext context){
     if(favorited == true){
-      final response =await http.post(Uri.parse(
-          'http://47.115.203.81:8080/douyin/favorite/action/?token=$userToken&video_id=$index&action_type=2'));
-      if(response.statusCode == 200){
-        setState(() {
-          _fetchVideos(context);
-        });
-      }else{
-        debugPrint('请求失败');
-      }
+      http.post(Uri.parse('http://47.115.203.81:8080/douyin/favorite/action/?token=$userToken&video_id=$index&action_type=2'))
+          .then((response){
+        if(response.statusCode == 200){
+          betterPlayerController.pause();
+          betterPlayerController.dispose();
+          _fetchVideos(this.context);
+        }else{
+          debugPrint('请求失败');
+        }
+      });
     }else{
-      final response =await http.post(Uri.parse(
-          'http://47.115.203.81:8080/douyin/favorite/action/?token=$userToken&video_id=$index&action_type=1'));
-      if(response.statusCode == 200){
-        setState(() {
-          _fetchVideos(context);
-        });
-      }else{
-        debugPrint('请求失败');
-      }
+      http.post(Uri.parse('http://47.115.203.81:8080/douyin/favorite/action/?token=$userToken&video_id=$index&action_type=1'))
+          .then((response){
+        if(response.statusCode == 200){
+          betterPlayerController.pause();
+          betterPlayerController.dispose();
+          _fetchVideos(this.context);
+        }else{
+          debugPrint('请求失败');
+        }
+      });
     }
   }
 
@@ -186,7 +188,7 @@ class _VideoPageState extends State<VideoPage> {
               }
             });
 
-            final betterPlayerController = BetterPlayerController(
+            betterPlayerController = BetterPlayerController(
                BetterPlayerConfiguration(
                 autoPlay: true,
                 looping: true,
@@ -245,7 +247,7 @@ class _VideoPageState extends State<VideoPage> {
                               color: video['is_favorite'] == true ? Colors.red : Colors.white,
                             ),
                             onPressed: () {
-                              _likeVideo(videoId,video['is_favorite']);
+                              _likeVideo(videoId,video['is_favorite'],this.context);
                             },
                           ),
                           Text(
@@ -274,6 +276,8 @@ class _VideoPageState extends State<VideoPage> {
                                 color: Colors.white,
                             ),
                             onPressed: () {
+                              betterPlayerController.pause();
+                              betterPlayerController.dispose();
                               _fetchVideos(this.context);
                             },
                           ),
