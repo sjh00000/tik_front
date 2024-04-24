@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/push_page.dart';
-import 'package:untitled/user_page.dart';
 import 'login_page.dart';
-import 'video_page.dart';
 
 
 void main() {
@@ -21,11 +18,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const LoginPage(title: 'FlutterHome Page'),
-      routes: {
-        '/video': (context) => const VideoPage(),
-        '/publish': (context) => PublishPage(),
-        '/user_info': (context) => const UserInfoPage(),
-      },
     );
   }
 }

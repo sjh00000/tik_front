@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class UserInfoPage extends StatefulWidget {
-  const UserInfoPage({super.key});
+  final String userToken;
+  const UserInfoPage({super.key, required this.userToken});
 
   @override
   State<UserInfoPage> createState() => _UserInfoPageState();
