@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_page.dart';
+import 'registration_page.dart'; // 导入注册页面
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.title}) : super(key: key);
@@ -65,13 +66,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //注册
-  Future<void> _register() async {
-    final String username = usernameController.text;
-    final String password = passwordController.text;
-    final response = await http.post(
-      Uri.parse('http://47.115.203.81:8080/douyin/user/register/?username=$username&password=$password'),
+  void _register() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RegistrationPage()), // 跳转到注册页面
     );
-    _handleResponse(response);
   }
 
   void _handleResponse(http.Response response) {
@@ -85,11 +84,11 @@ class _LoginPageState extends State<LoginPage> {
       // 注册或登录成功，进行页面导航
       _saveLoginState(); // 只有在登录成功后保存记住密码状态
       navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage(int.parse(userId), userToken)),
+        MaterialPageRoute(builder: (context) => MyHomePage(int.parse(userId), userToken: userToken,)),
       );
     } else {
       // 注册或登录失败，显示相应的提示信息
-      final String errorMessage = jsonData['message'] ?? '操作失败，请稍后重试或联系客服';
+      final String errorMessage = jsonData['message'] ?? '账号或密码输入不正确，请重新再试！';
       ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
@@ -110,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(controller: usernameController, decoration: const InputDecoration(labelText: '用户名')),
+              TextField(controller: usernameController, decoration: const InputDecoration(labelText: '账号')),
               TextField(controller: passwordController, obscureText: true, decoration: const InputDecoration(labelText: '密码')),
               Row(
                 children: [
